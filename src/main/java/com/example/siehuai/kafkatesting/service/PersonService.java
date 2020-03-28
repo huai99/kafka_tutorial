@@ -22,6 +22,7 @@ public class PersonService {
         return this.kafkaTemplate.executeInTransaction(t -> {
             Person save = this.personRepository.save(person);
             t.send("person", person.getName());
+            // After throwing exception, the message publishing and db saving fail together
             throw new RuntimeException();
         });
     }
